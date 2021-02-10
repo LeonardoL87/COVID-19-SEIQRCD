@@ -11,18 +11,13 @@ Paramters=zeros(iter,12);
 for i=1:iter
 % Fitting of the generalized SEIR model to the real data
 % Definition of the first estimates for the parameters
-alpha_guess =(.09-.01).*rand(1,2) + .01;% random number between 0.01 and 0.09; %protection rate
-beta_guess = rand(1,2);%1.0; % Infection rate
-LT_guess = (10-1).*rand() + 1;% random number between 1 and 10; % latent time in days
-QT_guess = (30-14).*rand() + 14;% random number between 14 and 30; % quarantine time in days
-lambda_guess = rand(1,2);%[0.1,0.05]; % recovery rate
-K_guess = rand(1,2);%[0.1,0.05]; % death rate
-guess = [alpha_guess,...
-   beta_guess,...
-   1/LT_guess,...
-   1/QT_guess,...
-    lambda_guess,...
-    K_guess];
+alpha0 =(.09-.01).*rand(1,2) + .01;% random number between 0.01 and 0.09; %protection rate
+beta0 = rand(1,2);%1.0; % Infection rate
+LT0 = (10-1).*rand() + 1;% random number between 1 and 10; % latent time in days
+QT0 = (30-14).*rand() + 14;% random number between 14 and 30; % quarantine time in days
+lambda0 = rand(1,2);%[0.1,0.05]; % recovery rate
+K0 = rand(1,2);%[0.1,0.05]; % death rate
+guess = [alpha0, beta0, 1/LT0, 1/QT0, lambda0, K0];
 % Set Initial conditions: All the vectors are contained in Data.mat
 E0 = Confirmed(init); % Initial number of exposed cases. Unknown but unlikely to be zero.
 I0 =  Confirmed(init); % Initial number of infectious cases. Unknown but unlikely to be zero.

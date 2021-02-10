@@ -7,22 +7,20 @@ function [parout,output,jacobian,residual] = fit_Model(X0,X1,time,guess)
 	I0=X1(3);
 	p = inputParser();
 	p.CaseSensitive = false;
-	p.addOptional('tolX',1e-6);  %  less tolerance for 
-	p.addOptional('tolFun',1e-6);  %  option for optimset
+	p.addOptional('tolX',1e-12);  %  less tolerance for 
+	p.addOptional('tolFun',1e-12);  %  option for optimset
 	tolX = p.Results.tolX ;
 	tolFun = p.Results.tolFun ;
 	% Options for the optimizer
-	options=optimset('TolX',tolX,'TolFun',tolFun,'MaxFunEvals',5000);%more evaluations in order to not end the fitting before reach the minimum
+	options=optimset('TolX',tolX,'TolFun',tolFun,'MaxFunEvals',10000);%more evaluations in order to not end the fitting before reach the minimum
 	% Write the target input into a matrix
 	IN = [Q;R;D];
 	tTarget = datenum(time-time(1)); 
 	t = tTarget(1):0.1:tTarget(end);
 	dt = median(diff(t)); 
+	up = [1 1 1 1 1 1 1 1];
 	modelFun1 = @SEIQRDCFitting; 
-	[Coeff,resnorm,residual,exitflag,output,Lambda,jacobian] =...
-	lsqcurvefit(@(para,t) modelFun1(para,t),...
-	guess,tTarget(:)',IN,zeros(1,numel(guess)),... 
-	[1 1 1 1 1 1 1 1],options);
+	[Coeff,resnorm,residual,exitflag,output,Lambda,jacobian] =lsqcurvefit(@(para,t) modelFun1(para,t),guess,tTarget(:)',IN,zeros(1,numel(guess)),ub,options);
 	% Write the fitted parameters
 	parout(1) = abs(Coeff(1));
 	parout(2) = abs(Coeff(2));
